@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Voice Fraud Detection</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-voice"></i> Voice Fraud Detection System</h1>
+            <p class="subtitle">Real-time analysis for synthetic and cloned voices</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Left Panel - Controls -->
+            <div class="left-panel">
+                <div class="control-card">
+                    <h2><i class="fas fa-microphone"></i> Voice Controls</h2>
+
+                    <div class="button-group">
+                        <button id="startBtn" class="btn btn-primary">
+                            <i class="fas fa-play"></i> Start Recording
+                        </button>
+                        <button id="stopBtn" class="btn btn-danger" disabled>
+                            <i class="fas fa-stop"></i> Stop Recording
+                        </button>
+                        <button id="testBtn" class="btn btn-secondary">
+                            <i class="fas fa-vial"></i> Test Sample
+                        </button>
+                    </div>
+
+                    <div class="settings">
+                        <h3><i class="fas fa-sliders-h"></i> Settings</h3>
+
+                        <div class="form-group">
+                            <label for="sensitivity">Detection Sensitivity:</label>
+                            <input type="range" id="sensitivity" min="1" max="10" value="6">
+                            <span id="sensitivityValue">Medium</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modelSelect">Analysis Model:</label>
+                            <select id="modelSelect">
+                                <option value="fast">Fast (Vosk + Features)</option>
+                                <option value="accurate">Accurate (Whisper + AI)</option>
+                                <option value="balanced">Balanced (Silero + ML)</option>
+                            </select>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="enableTranscription" checked>
+                                Enable Live Transcription
+                            </label>
+                            <label>
+                                <input type="checkbox" id="enableAlerts" checked>
+                                Enable Audio Alerts
+                            </label>
+                            <label>
+                                <input type="checkbox" id="saveSamples">
+                                Save Suspicious Samples
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+                    <ul>
+                        <li>Detects AI-generated voices in real-time</li>
+                        <li>Analyzes 50+ voice characteristics</li>
+                        <li>Identifies synthetic voice patterns</li>
+                        <li>Flags potential fraud attempts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Panel - Results -->
+            <div class="right-panel">
+                <div class="status-card">
+                    <h2><i class="fas fa-chart-line"></i> Live Analysis</h2>
+
+                    <div class="status-indicator">
+                        <div class="status-header">
+                            <span class="status-label">System Status:</span>
+                            <span id="statusText" class="status-idle">IDLE</span>
+                        </div>
+
+                        <div class="visualizer">
+                            <canvas id="audioVisualizer" width="400" height="100"></canvas>
+                        </div>
+
+                        <div class="meter">
+                            <div class="meter-label">Fraud Risk Level</div>
+                            <div class="meter-bar">
+                                <div id="riskBar" class="meter-fill"></div>
+                            </div>
+                            <div class="meter-labels">
+                                <span>Low</span>
+                                <span>Medium</span>
+                                <span>High</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-card">
+                    <h2><i class="fas fa-clipboard-check"></i> Detection Results</h2>
+
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-label">Voice Authenticity</div>
+                            <div class="result-value" id="authenticityScore">--%</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Synthetic Score</div>
+                            <div class="result-value" id="syntheticScore">--%</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Replay Risk</div>
+                            <div class="result-value" id="replayRisk">--%</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Confidence</div>
+                            <div class="result-value" id="confidence">--%</div>
+                        </div>
+                    </div>
+
+                    <div class="detection-breakdown">
+                        <h4><i class="fas fa-search"></i> Detection Breakdown</h4>
+                        <div class="breakdown-list">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Spectral Analysis:</span>
+                                <span class="breakdown-value" id="breakdownSpectral">--</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Pitch Patterns:</span>
+                                <span class="breakdown-value" id="breakdownPitch">--</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Noise Profile:</span>
+                                <span class="breakdown-value" id="breakdownNoise">--</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Prosody Analysis:</span>
+                                <span class="breakdown-value" id="breakdownProsody">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transcription-card">
+                    <h2><i class="fas fa-comment-alt"></i> Live Transcription</h2>
+                    <div class="transcription-box" id="transcriptionBox">
+                        <div class="placeholder">Speech will appear here...</div>
+                    </div>
+                    <div class="transcription-controls">
+                        <button id="copyBtn" class="btn-small">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <button id="clearBtn" class="btn-small">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="alerts-card">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Alerts & Warnings</h2>
+                    <div class="alerts-container" id="alertsContainer">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            System ready. Click "Start Recording" to begin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Voice Fraud Detection System v1.0 | Real-time AI Voice Analysis</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                <a href="#"><i class="fas fa-file-alt"></i> Documentation</a>
+                <a href="#"><i class="fas fa-code"></i> API</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="alertSound" src="https://assets.mixkit.co/active_storage/sfx/20/20-preview.mp3"></audio>
+    <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/166/166-preview.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
